@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Cuecas do Antílope dApp</title>
     <style>
       body {
         text-align: center;
@@ -25,6 +25,7 @@
         display: flex;
         flex-direction: column;
         margin-bottom: 2rem;
+        margin-top: 2rem;
         border: dashed navy 1px;
         padding: 10px;
         font-size: 13px;
@@ -63,14 +64,15 @@
     <main>
       <h1>Cuecas do Antílope!</h1>
       <p>Qual cueca o Antílope está vestindo?</p>
+
+      <div class="container">
+        <button id="get" onclick="getMood()">Saber qual</button>
+        <div id="getter"></div>
+      </div>
       <div class="container">
         <label for="mood">Informar cueca:</label>
         <input type="text" id="mood" />
         <button id="set" onclick="setMood()">Salvar</button>
-      </div>
-      <div class="container">
-        <button id="get" onclick="getMood()">Saber qual</button>
-        <div id="getter"></div>
       </div>
     </main>
 
