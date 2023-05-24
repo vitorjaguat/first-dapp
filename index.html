@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        text-align: center;
+        font-family: Menlo, Helvetica, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+      }
+      main {
+        height: fit-content;
+      }
+
+      div.container {
+        width: 200px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 2rem;
+        border: dashed navy 1px;
+        padding: 10px;
+        font-size: 13px;
+      }
+
+      button {
+        width: 100%;
+        font-family: inherit;
+      }
+      button#get {
+        margin-bottom: 5px;
+      }
+      button#set {
+        margin-top: 5px;
+      }
+      input {
+        margin-top: 2px;
+        height: 2rem;
+        text-align: center;
+        font-family: inherit;
+        color: rgb(43, 73, 74);
+      }
+      #getter {
+        width: 100%;
+        height: 2rem;
+        text-align: center;
+        background-color: bisque;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <h1>Cuecas do Antílope!</h1>
+      <p>Qual cueca o Antílope está vestindo?</p>
+      <div class="container">
+        <label for="mood">Informar cueca:</label>
+        <input type="text" id="mood" />
+        <button id="set" onclick="setMood()">Salvar</button>
+      </div>
+      <div class="container">
+        <button id="get" onclick="getMood()">Saber qual</button>
+        <div id="getter"></div>
+      </div>
+    </main>
+
+    <script
+      src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"
+      type="application/javascript"
+    ></script>
+    <script>
+      const provider = new ethers.providers.Web3Provider(
+        window.ethereum,
+        'goerli'
+      );
+
+      const MoodContractAddress = '0x9a6177f056B893f6178a3a57b469082f9bd3fDf9';
+      const MoodContractABI = [
+        {
+          inputs: [
+            {
+              internalType: 'string',
+              name: '_mood',
+              type: 'string',
+            },
+          ],
+          name: 'setMood',
+          outputs: [],
+          stateMutability: 'nonpayable',
+          type: 'function',
+        },
+        {
+          inputs: [],
+          name: 'getMood',
+          outputs: [
+            {
+              internalType: 'string',
+              name: '',
+              type: 'string',
+            },
+          ],
+          stateMutability: 'view',
+          type: 'function',
+        },
+      ];
+
+      let MoodContract;
+      let signer;
+
+      provider.send('eth_requestAccounts', []).then(() => {
+        provider.listAccounts().then(function (accounts) {
+          signer = provider.getSigner(accounts[0]);
+          MoodContract = new ethers.Contract(
+            MoodContractAddress,
+            MoodContractABI,
+            signer
+          );
+        });
+      });
+
+      async function getMood() {
+        const getMoodPromise = MoodContract.getMood();
+        const Mood = await getMoodPromise;
+        document.getElementById('getter').textContent = Mood;
+      }
+
+      async function setMood() {
+        const mood = document.getElementById('mood').value;
+        const setMoodPromise = MoodContract.setMood(mood);
+        await setMoodPromise;
+      }
+    </script>
+  </body>
+</html>
